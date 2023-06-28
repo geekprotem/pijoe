@@ -1,0 +1,23 @@
+
+- name: is k3s there?
+  ansible.builtin.stat:
+    path: /usr/local/bin/k3s
+  register: k3s_bin
+
+- name: put token file
+  ansible.builtin.copy:
+    dest: /tmp/pijoe-node-token
+    src: /tmp/pijoe-node-token
+
+- name: get the cluster token
+  shell: cat /tmp/pijoe-node-token
+  register: token_content
+
+- name: install k3s if needed
+  shell: "sh /opt/install_scripts/k3s.install.sh --node-label name={{ inventory_hostname_short }}"
+  # shell: "sh /opt/install_scripts/k3s.install.sh --node-label node-role.kubernetes.io/{{ inventory_hostname_short }}={{ inventory_hostname_short }} --node-label node-role.kubernetes.io/worker=worker --node-label name={{ inventory_hostname_short }}"
+  when:
+    - k3s_bin.stat.exists == False
+  environment:
+    K3S_URL: "https://{{ cluster.master }}:6443"
+    K3S_TOKEN: "{{ token_content.stdout }}"

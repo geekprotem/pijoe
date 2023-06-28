@@ -1,0 +1,20 @@
+
+all:
+  vars:
+    cluster:
+      master: pijoe0.local
+    rancher:
+      host: rancher.pinet
+      # tag: v2.3.5-linux-arm64 (websocket never works?!)
+      tag: v2.5.9-rc2-linux-arm64
+  children:
+    master:
+      hosts:
+        pijoe0.local:
+    workers:
+      hosts:
+        pijoe1.local:
+        pijoe2.local:
+        pijoe3.local:
+        pijoe4.local:
+        pijoe5.local:

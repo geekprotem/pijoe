@@ -1,0 +1,8 @@
+
+- name: run uninstall script
+  shell: "k3s-uninstall.sh > /dev/null"
+  ignore_errors: yes
+
+- name: run uninstall script
+  shell: "k3s-agent-uninstall.sh > /dev/null"
+  ignore_errors: yes

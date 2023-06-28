@@ -1,0 +1,33 @@
+
+- name: is k3s there?
+  ansible.builtin.stat:
+    path: /usr/local/bin/k3s
+  register: k3s_bin
+
+- name: install k3s if needed
+  shell: "sh /opt/install_scripts/k3s.install.sh --write-kubeconfig-mode 644"
+  when:
+    - k3s_bin.stat.exists == False
+
+- name: get token file
+  ansible.builtin.fetch:
+    src: /var/lib/rancher/k3s/server/node-token
+    dest: /tmp/pijoe-node-token
+    flat: yes
+
+- name: set kubeconfig to use hostname
+  ansible.builtin.replace:
+    path: /etc/rancher/k3s/k3s.yaml
+    regexp: '127\.0\.0\.1'
+    replace: "{{ cluster.master }}"
+
+- name: get kubeconfig file
+  ansible.builtin.fetch:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: /tmp/kubeconfig/k3s.yaml
+    flat: yes
+
+- name: wait for port 6443
+  wait_for:
+    port: 6443
+    delay: 10

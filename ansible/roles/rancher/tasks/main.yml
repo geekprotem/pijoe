@@ -1,0 +1,17 @@
+
+- name: put rancher installer
+  template:
+    src: "install_rancher.sh"
+    dest: /opt/install_scripts/install_rancher.sh
+    owner: pi
+    group: pi
+
+- name: install rancher
+  shell: sh /opt/install_scripts/install_rancher.sh
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+
+# - name: sleep for a few minutes
+#   wait_for:
+#     timeout: 300
+#   delegate_to: localhost

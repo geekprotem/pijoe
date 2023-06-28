@@ -1,0 +1,19 @@
+
+- name: copy installer
+  ansible.builtin.copy:
+    src: install_argocd.sh
+    dest: /opt/install_scripts/install_argocd.sh
+    owner: pi
+    group: pi
+
+- name: copy spec
+  ansible.builtin.copy:
+    src: specs/argocd.yaml
+    dest: /opt/install_scripts/specs/argocd.yaml
+    owner: pi
+    group: pi
+
+- name: install
+  shell: sh /opt/install_scripts/install_argocd.sh
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml

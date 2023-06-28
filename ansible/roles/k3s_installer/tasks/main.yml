@@ -1,0 +1,7 @@
+
+- name: copy k3s installer
+  ansible.builtin.copy:
+    src: k3s.install.sh
+    dest: /opt/install_scripts/k3s.install.sh
+    owner: pi
+    group: pi

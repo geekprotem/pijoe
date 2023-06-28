@@ -1,0 +1,36 @@
+configs:
+  knownHosts:
+    data:
+      ssh_known_hosts: |
+        github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCnekU48LPYSvGKFqKoZLOWvRGIVJiqWTDbQvzQsp0pcIs8C5IgICEo5CnmF0wC0pXwbYi2vtodiGXPRqkdzLR7drw9nv2TfQNY+qPCtpQblO0A57o51r2Mp4QyEIhFNNFHheZ9fPCC1rxW7dDcJf4kdqgAk++w/3Hn3qJb1CB11R+TUzEc/+JmTApZUoZUytsAl6nifITY+P9Jq2It78zh66F9/yof0Cw6qtxq3qkui5vtskV/2BqAp10MskFpZPhrNfb42OCnfRcOxlRpD+20o1JS/gWGGeMNLJBMTWpYXCOZbrKO2pvVHTdUjh/PPqQSOochYbtxekz73Bn7hH4p
+
+server:
+  replicas: 3
+  config:
+    repositories: |
+      - url: git@github.com:geekprotem/argo-test.git
+        sshPrivateKeySecret:
+          name: github.com
+          key: sshPrivateKey
+  additionalApplications:
+    - name: apps
+      namespace: argocd
+      additionalLabels: {}
+      additionalAnnotations:
+        finalizers:
+        - resources-finalizer.argocd.argoproj.io
+      project: default
+      source:
+        repoURL: git@github.com:geekprotem/argo-test.git
+        targetRevision: main
+        path: argocd_apps/apps
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: argocd
+  ingress:
+    annotations:
+      nginx.ingress.kubernetes.io/force-ssl-redirect: false
+      nginx.ingress.kubernetes.io/ssl-passthrough: true
+    enabled: true
+    hosts:
+    - argocd.pinet.local

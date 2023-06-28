@@ -1,0 +1,14 @@
+
+- name: create scripts directory if needed
+  ansible.builtin.file:
+    path: /opt/install_scripts
+    state: directory
+    owner: pi
+    group: pi
+
+- name: create specs directory if needed
+  ansible.builtin.file:
+    path: /opt/install_scripts/specs
+    state: directory
+    owner: pi
+    group: pi

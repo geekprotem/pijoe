@@ -1,0 +1,22 @@
+---
+- hosts: common
+  roles:
+    - hostname
+    - common_packages
+    - common_files
+    - k3s_installer
+
+- hosts: master
+  roles:
+    - k3s_master
+
+- hosts: workers
+  roles:
+    - k3s_worker
+
+- hosts: master
+  roles:
+    - helm
+    # - cert_manager
+    # - rancher
+    - argocd
